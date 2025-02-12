@@ -6,6 +6,8 @@ from applications.common.admin_log import login_log
 from applications.common.utils.http import fail_api, success_api
 from applications.models import User
 
+
+#这里，'passport' 是蓝图的名称，__name__ 是当前模块的名称，url_prefix='/passport' 表示所有与该蓝图相关的路由都会自动加上 /passport 前缀。
 bp = Blueprint('passport', __name__, url_prefix='/passport')
 
 
@@ -36,6 +38,7 @@ def login_post():
 
     if not username or not password or not code:
         return fail_api(msg="用户名或密码没有输入")
+        # return {"nihao":2222}
     s_code = session.get("code", None)
     session["code"] = None
 

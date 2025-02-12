@@ -35,7 +35,7 @@ class BaseConfig:
     # JSON配置
     JSON_AS_ASCII = False
 
-    SECRET_KEY = "pear-system-flask"
+    SECRET_KEY = "pear-system-flask1"
 
     # mysql 配置
     # MYSQL_USERNAME = "root"
@@ -49,7 +49,7 @@ class BaseConfig:
     # SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{MYSQL_USERNAME}:{urlquote(MYSQL_PASSWORD)}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}?charset=utf8mb4"
 
     # 默认日志等级
-    LOG_LEVEL = logging.WARN
+    LOG_LEVEL = logging.ERROR
     """
     flask-mail配置
     """
