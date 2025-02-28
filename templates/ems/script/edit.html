@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>脚本编辑</title>
+    {% include 'system/common/header.html' %}
+</head>
+<body>
+<form class="layui-form" action="">
+    <div class="mainBox">
+        <div class="main-container">
+            <div class="main-container">
+
+
+                 <div class="layui-form-item layui-hide">
+                    <label class="layui-form-label">脚本id</label>
+                    <div class="layui-input-block">
+                        <input type="text" value="{{ scriptinfo.id }}" name="id" lay-verify="title"
+                               autocomplete="off" placeholder="请输入标题" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item ">
+                    <label class="layui-form-label">脚本名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" value="{{ scriptinfo.script_name }}" name="script_name" lay-verify="title"
+                               autocomplete="off" placeholder="请输入标题" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item ">
+                    <label class="layui-form-label">脚本描述</label>
+                    <div class="layui-input-block">
+                        <input type="text" value="{{ scriptinfo.script_desc }}" name="script_desc" lay-verify="title"
+                               autocomplete="off" placeholder="请输入标题" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item ">
+                    <label class="layui-form-label">用户验证</label>
+                    <div class="layui-input-block">
+                        <input type="text" value="{{ scriptinfo.auth_info }}" name="auth_info" lay-verify="title"
+                               autocomplete="off" placeholder="请输入标题" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item ">
+                    <label class="layui-form-label">脚本入参</label>
+                    <div class="layui-input-block">
+                        <input type="text" value="{{ scriptinfo.input_params }}" name="input_params" lay-verify="title"
+                               autocomplete="off" placeholder="请输入标题" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item ">
+                    <label class="layui-form-label">脚本路径</label>
+                    <div class="layui-input-block">
+                        <input type="text" value="{{ scriptinfo.script_path }}" name="script_path" lay-verify="title"
+                               autocomplete="off" placeholder="请输入标题" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">脚本类型</label>
+                    <div class="layui-input-block">
+                        <!-- 选择框 -->
+                        <select name="task_type" lay-filter="demo-select-filter" lay-verify="required">
+                            <option value="">请选择</option>
+                            <option value="0" {% if scriptinfo.task_type == '0' %}selected{% endif %}>基本脚本</option>
+                            <option value="1" {% if scriptinfo.task_type == '1' %}selected{% endif %}>接口脚本</option>
+                            <option value="2" {% if scriptinfo.task_type == '2' %}selected{% endif %}>定时脚本</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="bottom">
+        <div class="button-container">
+            <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit=""
+                    lay-filter="user-update">
+                <i class="layui-icon layui-icon-ok"></i>
+                提交
+            </button>
+            <button type="reset" class="pear-btn pear-btn-sm">
+                <i class="layui-icon layui-icon-refresh"></i>
+                重置
+            </button>
+        </div>
+    </div>
+</form>
+{% include 'system/common/footer.html' %}
+<script>
+    layui.use(['form', 'jquery', 'dtree'], function () {
+        let form = layui.form
+        let $ = layui.jquery
+
+
+        form.on('submit(user-update)', function (data) {
+
+            $.ajax({
+                url: '/ems/script/update',
+                data: JSON.stringify(data.field),
+                dataType: 'json',
+                contentType: 'application/json',
+                type: 'post',
+                success: function (result) {
+                    if (result.success) {
+                        layer.msg(result.msg, {icon: 1, time: 1000}, function () {
+                            parent.layer.close(parent.layer.getFrameIndex(window.name))//关闭当前页
+                            parent.layui.table.reload('user-table')
+                        })
+                    } else {
+                        layer.msg(result.msg, {icon: 2, time: 1000})
+                    }
+                }
+            })
+            return false
+        })
+    })
+</script>
+</body>
+</html>

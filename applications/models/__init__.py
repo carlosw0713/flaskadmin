@@ -8,3 +8,9 @@ from .admin_role_power import role_power
 from .admin_user import User
 from .admin_user_role import user_role
 from .admin_mail import Mail
+
+
+
+# 引入ems model
+from applications.models.ems.job import JobInfo,JobLog
+from applications.models.ems.script import ScriptInfo

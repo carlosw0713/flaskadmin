@@ -1,13 +1,24 @@
 # xss过滤
+import json
+
 import validators
 from markupsafe import escape
 from validators import validator
 
 
 def str_escape(s):
+    '''
+    如果输入字符串为空，返回 None。
+    否则，调用 escape 函数对字符串进行转义，并返回转义后的字符串。
+    '''
     if not s:
         return None
     return str(escape(s))
+
+
+# def json_escape(s):
+#
+#     return json.loads(s)
 
 
 between = validators.between

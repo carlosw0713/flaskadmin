@@ -30,5 +30,7 @@ def register_system_bps(app: Flask):
     system_bp.register_blueprint(passport_bp)
     system_bp.register_blueprint(right_bp)
     system_bp.register_blueprint(dept_bp)
+
+
     app.register_blueprint(index_bp)
     app.register_blueprint(system_bp)

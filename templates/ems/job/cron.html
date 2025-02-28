@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Cron表达式生成器</title>
+    {% include 'system/common/header.html' %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/layui-v2.7.6/dist/css/layui.css">
+</head>
+<body>
+
+<form class="layui-form" id="cronForm">
+    <div class="layui-form-item">
+        <label class="layui-form-label">秒</label>
+        <div class="layui-input-block">
+            <select name="second" lay-filter="second">
+                <option value="0">每秒</option>
+                <option value="1">指定秒（例如：5）</option>
+                <option value="*/5">每隔5秒</option>
+                <!-- 可以根据需要添加更多选项 -->
+            </select>
+            <input type="text" name="secondValue" placeholder="请输入具体值" class="layui-input" style="display:none;">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">分钟</label>
+        <div class="layui-input-block">
+            <select name="minute" lay-filter="minute">
+                <option value="0">每分钟</option>
+                <option value="1">指定分钟（例如：10）</option>
+                <option value="*/5">每隔5分钟</option>
+                <!-- 可以根据需要添加更多选项 -->
+            </select>
+            <input type="text" name="minuteValue" placeholder="请输入具体值" class="layui-input" style="display:none;">
+        </div>
+    </div>
+
+    <!-- 其他字段类似 -->
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" type="button" onclick="generateCron()">生成Cron表达式</button>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">生成的Cron表达式</label>
+        <div class="layui-input-block">
+            <input type="text" id="cronExpression" class="layui-input" readonly>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" type="button" onclick="saveCron()">保存</button>
+        </div>
+    </div>
+</form>
+
+{% include 'system/common/footer.html' %}
+
+
+<script>
+layui.use(['form'], function(){
+    var form = layui.form;
+
+    // 监听秒选择变化
+    form.on('select(second)', function(data){
+        if (data.value === '1') {
+            document.querySelector("input[name='secondValue']").style.display = 'block';
+        } else {
+            document.querySelector("input[name='secondValue']").style.display = 'none';
+        }
+    });
+
+    // 类似地监听其他字段的变化...
+});
+
+function generateCron() {
+    var second = document.querySelector("select[name='second']").value;
+    var minute = document.querySelector("select[name='minute']").value;
+    // 获取其他字段的值...
+
+    if (second === '1') second = document.querySelector("input[name='secondValue']").value;
+    if (minute === '1') minute = document.querySelector("input[name='minuteValue']").value;
+    // 处理其他字段...
+
+    var cronExpression = `${second} ${minute} ...`; // 完整的Cron表达式
+    document.getElementById('cronExpression').value = cronExpression;
+}
+
+function saveCron() {
+    var cronExpression = document.getElementById('cronExpression').value;
+    window.opener.postMessage(cronExpression, window.location.origin);
+    window.close(); // 关闭当前窗口
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>脚本管理</title>
+    {% include 'system/common/header.html' %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='system/admin/css/other/user.css') }}"/>
+</head>
+<body class="pear-container">
+{# 查询表单 #}
+<div class="layui-card">
+    <div class="layui-card-body">
+        <form class="layui-form" action="" lay-filter="user-query-form">
+
+            <div class="layui-form-item">
+
+                <label class="layui-form-label">脚本名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="script_name" placeholder="" class="layui-input">
+                </div>
+
+                <label class="layui-form-label">脚本类型</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="task_type" placeholder="" class="layui-input">
+                </div>
+
+                <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="user-query">
+                    <i class="layui-icon layui-icon-search"></i>
+                    查询
+                </button>
+                <button type="reset" class="pear-btn pear-btn-md">
+                    <i class="layui-icon layui-icon-refresh"></i>
+                    重置
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+{# 用户表格 #}
+<div class="user-main user-collasped">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="script-table" lay-filter="script-table"></table>
+        </div>
+    </div>
+</div>
+</body>
+{# 表格操作 #}
+<script type="text/html" id="script-toolbar">
+{#    {% if authorize("system:user:add") %}#}
+        <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+            <i class="pear-icon pear-icon-add"></i>
+            新增
+        </button>
+
+</script>
+
+{# 任务修改操作 #}
+<script type="text/html" id="script-bar">
+    {% if authorize("system:user:edit") %}
+        <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="pear-icon pear-icon-edit"> 编辑</i>
+        </button>
+    {% endif %}
+        <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="debug"><i class="pear-icon pear-icon-edit">调试</i>
+        </button>
+
+    {% if authorize("system:user:remove") %}
+        <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i
+                class="pear-icon pear-icon-ashbin"> 删除</i>
+        </button>
+    {% endif %}
+</script>
+
+{% raw %}
+
+<script type="text/html" id="user-createTime">
+    {{layui.util.toDateString(d.create_at,  "yyyy-MM-dd HH:mm:ss")}}
+</script>
+
+<script type="text/html" id="user-updateTime">
+    {{layui.util.toDateString(d.update_at,  "yyyy-MM-dd HH:mm:ss")}}
+</script>
+{% endraw %}
+
+{% include 'system/common/footer.html' %}
+
+<script>
+    layui.use(['table', 'dtree', 'form', 'jquery', 'popup', 'common'], function () {
+    {#layui.use(['table', 'form', 'jquery', 'popup', 'common'], function () {#}
+        let table = layui.table
+        let form = layui.form
+        let $ = layui.jquery
+        let dtree = layui.dtree
+        let popup = layui.popup
+        let common = layui.common
+        {#let MODULE_PATH = "{{ url_for('ems.job.main') }}"#}
+
+        {# ems.job.main 代表是 view中ems.job.main.方法名#}
+        let MODULE_PATH = "{{ url_for('ems.script.main') }}"
+        // 表格数据
+        let cols = [
+            [
+                {title: 'id', field: 'id', align: 'center'},
+                {title: '脚本名称', field: 'script_name', align: 'center', width: 110},
+                {#{title: '用户验证', field: 'auth_info', align: 'center'},#}
+                {#{title: '脚本入参', field: 'input_params', align: 'center'},#}
+                {title: '脚本路径', field: 'script_path', align: 'center', templet: '#user-enable', width: 120},
+
+                {title: '脚本类型', field: 'task_type', align: 'center',
+                    templet: function(d){
+                    var taskType = d.task_type;
+                    if (taskType === '0') {
+                        return '基础脚本';
+                    } else if (taskType === '1') {
+                        return '接口脚本';
+                    } else if (taskType === '2') {
+                        return '定时脚本';
+                    } else {
+                        return '未知类型';
+                    }
+                }},
+                {#{title: '脚本描述', field: 'script_desc', align: 'center'},#}
+
+                {#toolbar和templet的用法需要注意！！！！！#}
+                {title: '注册时间', field: 'create_at', templet: '#user-createTime', align: 'center'},
+                {title: '更新时间', field: 'update_at', templet: '#user-updateTime', align: 'center'},
+                {title: '操作', toolbar: '#script-bar', align: 'center', width: 280}
+
+            ]
+        ]
+
+        // 渲染表格数据
+        table.render({
+            elem: '#script-table',
+            url: MODULE_PATH + 'page',
+            page: true,
+            cols: cols,
+            skin: 'line',
+            height: 'full-148',
+            toolbar: '#script-toolbar', /*工具栏*/
+            text: {none: '暂无脚本信息'},
+            defaultToolbar: [{layEvent: 'refresh', icon: 'layui-icon-refresh'}, 'filter', 'print', 'exports'] /*默认工具栏*/
+        })
+
+
+        table.on('tool(script-table)', function (obj) {
+            if (obj.event === 'remove') {
+                window.remove(obj)
+            } else if (obj.event === 'edit') {
+                window.edit(obj)
+            }
+            else if (obj.event === 'debug') {
+                window.debug(obj)
+            }
+        })
+
+        table.on('toolbar(script-table)', function (obj) {
+            if (obj.event === 'add') {
+                window.add()
+            } else if (obj.event === 'refresh') {
+                window.refresh()
+            } else if (obj.event === 'batchRemove') {
+                window.batchRemove(obj)
+            } else if (obj.event === 'collasped') {
+                $('.user-left').toggleClass('user-collasped')
+                $('.user-main').toggleClass('user-collasped')
+                table.resize()
+            }
+        })
+
+        form.on('submit(user-query)', function (data) {
+            window.refresh(data.field)
+            return false
+        })
+
+        form.on('switch(user-enable)', function (obj) {
+            let operate
+            if (obj.elem.checked) {
+                operate = 'enable'
+            } else {
+                operate = 'disable'
+            }
+            let loading = layer.load()
+            $.ajax({
+                url: '{{ url_for('system.user.main') }}' + operate,
+                data: JSON.stringify({userId: this.value}),
+                dataType: 'json',
+                contentType: 'application/json',
+                type: 'put',
+                success: function (result) {
+                    layer.close(loading)
+                    if (result.success) {
+                        popup.success(result.msg)
+                    } else {
+                        popup.failure(result.msg)
+                    }
+                }
+            })
+        })
+
+        window.add = function () {
+            layer.open({
+                type: 2,
+                title: '新增',
+                shade: 0.1,
+                area: ['550px', '550px'],
+                content: MODULE_PATH + 'add'
+            })
+        }
+
+        window.edit = function (obj) {
+            layer.open({
+                type: 2,
+                title: '修改',
+                shade: 0.1,
+                area: ['550px', '500px'],
+                content: MODULE_PATH + 'edit/' + obj.data['id']
+            })
+        }
+
+        window.debug = function (obj) {
+            layer.open({
+                type: 2,
+                title: '调试',
+                shade: 0.1,
+                area: ['550px', '500px'],
+                content: MODULE_PATH + 'debug/' + obj.data['id']
+            })
+        }
+
+
+        window.remove = function (obj) {
+            layer.confirm('确定要删除该任务', {icon: 3, title: '提示'}, function (index) {
+                layer.close(index)
+                let loading = layer.load()
+                $.ajax({
+                    url: MODULE_PATH + 'remove/' + obj.data['id'],
+                    dataType: 'json',
+                    type: 'post',
+                    success: function (result) {
+                        layer.close(loading)
+                        if (result.success) {
+                            popup.success(result.msg, function () {
+                                obj.del()
+                            })
+                        } else {
+                            popup.failure(result.msg)
+                        }
+                    }
+                })
+            })
+        }
+
+
+        window.refresh = function (param) {
+            table.reload('script-table', {where: param})
+        }
+    })
+</script>
+
+
+</html>

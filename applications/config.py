@@ -32,6 +32,11 @@ class BaseConfig:
     UPLOADED_FILES_ALLOW = ['gif', 'jpg']
     UPLOADS_AUTOSERVE = True
 
+    # redis配置
+    CELERY_RESULT_BACKEND='redis://39.105.205.148:6379/0'
+    CELERY_BROKER_URL='redis://39.105.205.148:6379/0'
+
+
     # JSON配置
     JSON_AS_ASCII = False
 

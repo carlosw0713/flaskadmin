@@ -9,4 +9,5 @@ class RoleOutSchema(SQLAlchemyAutoSchema):
         # include_relationships = True  # 输出模型对象时同时对外键，是否也一并进行处理
         include_fk = True  # 序列化阶段是否也一并返回主键
         # fields= ["id","name"] # 启动的字段列表
+        # fields= ["name","id"] # 启动的字段列表
         # exclude = ["id","name"] # 排除字段列表

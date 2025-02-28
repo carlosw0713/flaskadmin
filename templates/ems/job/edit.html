@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>任务编辑</title>
+    {% include 'system/common/header.html' %}
+</head>
+<body>
+<form class="layui-form" action="">
+    <div class="mainBox">
+        <div class="main-container">
+            <div class="main-container">
+                <div class="layui-form-item layui-hide">
+                    <label class="layui-form-label">任务id</label>
+                    <div class="layui-input-block">
+                        <input type="text" value="{{ data.id }}" name="id" lay-verify="title"
+                               autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item ">
+                    <label class="layui-form-label">任务名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" value="{{ data.job_name }}" name="job_name" lay-verify="title"
+                               autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">脚本信息</label>
+                    <div class="layui-input-block">
+                        <select name="script_name_id" id="script_name_id" lay-verify="required" lay-search="" class="layui-select">
+                            <option value="{{ data.script_id }}">{{ data.script_name }}({{ data.script_id }})</option>
+                            <!-- 动态生成选项 -->
+                        </select>
+                        <div id="loading" style="display:none;">加载中...</div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">通知配置</label>
+                    <div class="layui-input-block">
+                        <input type="text" value="{{ data.notification_config }}" name="notification_config" lay-verify="title"
+                               autocomplete="off" placeholder="请输入"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">cron表达式</label>
+                    <div class="layui-input-block">
+                        <input type="text" value="{{ data.cron_expression }}" name="cron_expression" lay-verify="title"
+                               autocomplete="off" placeholder="请输入"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-block">
+                        <input type="text" value="{{ data.job_status }}" name="job_status" lay-verify="title"
+                               autocomplete="off" placeholder="请输入"
+                               class="layui-input">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="bottom">
+        <div class="button-container">
+            <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit=""
+                    lay-filter="user-update">
+                <i class="layui-icon layui-icon-ok"></i>
+                提交
+            </button>
+            <button type="reset" class="pear-btn pear-btn-sm">
+                <i class="layui-icon layui-icon-refresh"></i>
+                重置
+            </button>
+        </div>
+    </div>
+</form>
+{% include 'system/common/footer.html' %}
+<script>
+    layui.use(['form', 'jquery', 'dtree'], function () {
+        let form = layui.form
+        let $ = layui.jquery
+
+        form.on('submit(user-update)', function (data) {
+
+        // 获取选中的<select>元素
+        var selectElement = document.getElementById('script_name_id');
+        var selectedOption = selectElement.options[selectElement.selectedIndex];
+
+        // 获取选中的script.id和script.script_name
+        var scriptId = selectedOption.value;
+        var scriptName = selectedOption.getAttribute('data-script-name');
+
+        // 将这两个值添加到data.field对象中
+        data.field.script_id = scriptId;
+        data.field.script_name = scriptName;
+
+            $.ajax({
+                url: '/ems/job/update',
+                data: JSON.stringify(data.field),
+                dataType: 'json',
+                contentType: 'application/json',
+                type: 'post',
+                success: function (result) {
+                    if (result.success) {
+                        layer.msg(result.msg, {icon: 1, time: 1000}, function () {
+                            parent.layer.close(parent.layer.getFrameIndex(window.name))//关闭当前页
+                            parent.layui.table.reload('user-table')
+                        })
+                    } else {
+                        layer.msg(result.msg, {icon: 2, time: 1000})
+                    }
+                }
+            })
+            return false
+        })
+    })
+
+
+    // 加载脚本列表信息
+document.addEventListener('DOMContentLoaded', function() {
+    loadScriptList();
+});
+
+function loadScriptList() {
+    var loading = document.getElementById('loading');
+    loading.style.display = 'block';
+
+    // 假设你的API端点是 /ems/script/page
+    fetch('/ems/script/page')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP错误！状态码: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            // 提取 data 字段中的脚本列表
+            var scriptData = data.data;
+            var selectElement = document.getElementById('script_name_id');
+
+            // 清空现有的选项（除了第一个默认选项）
+            while (selectElement.options.length > 1) {
+                selectElement.remove(1);
+            }
+
+            // 遍历脚本列表并动态生成选项
+            scriptData.forEach(function(script) {
+                var option = document.createElement('option');
+                option.value = script.id; // 主键id作为value
+                option.text = `${script.script_name} (${script.id})`; // 显示文本
+                option.setAttribute('data-script-name', script.script_name); // 添加自定义属性
+
+
+            // 如果当前脚本的ID与初始值匹配，则设为默认选中项
+            if (option.value === "{{ data.script_id }}") {
+                option.selected = true;
+            }
+                selectElement.appendChild(option);
+
+            });
+
+
+            // 重新渲染选择框
+            layui.form.render('select');
+            loading.style.display = 'none';
+        })
+        .catch(error => {
+            console.error('获取脚本列表失败:', error);
+            alert('获取脚本列表失败，请检查控制台日志');
+            loading.style.display = 'none';
+        });
+}
+
+
+</script>
+</body>
+</html>

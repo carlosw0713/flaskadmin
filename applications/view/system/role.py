@@ -1,3 +1,5 @@
+import json
+
 from flask import Blueprint, render_template, request, jsonify
 from flask_login import login_required
 
@@ -30,7 +32,25 @@ def table():
     if role_code:
         filters.append(Role.code.contains(role_code))
     roles = Role.query.filter(*filters).layui_paginate()
-    return table_api(data=RoleOutSchema(many=True).dump(roles), count=roles.total)
+
+
+    # #写法一  # 使用列表推导式遍历roles.items，并提取每个role对象的id、details和enable属性
+    # data=[{
+    #         'id': role.id,
+    #         'details': role.details,
+    #         'enable': role.enable,
+    #         # 'create_at': role.create_at,
+    #         # 'update_at': role.update_at,
+    #
+    #     } for role in roles.items]
+    #
+    # # 假设role对象有一个to_dict方法
+    # data = [role.to_dict(only=['id', 'details', 'enable']) for role in roles.items]
+
+    # 写法二 # 使用ORM的序列化功能，many=True表示roles是一个包含多个对象的集合
+    data = RoleOutSchema(many=True).dump(roles)
+
+    return table_api(data=data, count=roles.total)
 
 
 # 角色增加
