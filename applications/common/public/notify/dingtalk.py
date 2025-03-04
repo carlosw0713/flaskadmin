@@ -19,11 +19,18 @@ from dingtalkchatbot.chatbot import DingtalkChatbot, FeedLink
 
 class DingTalkSendMsg:
 
-    """ 发送钉钉通知 """
     timeStamp = str(round(time.time() * 1000))
-    img_url='https://img.alicdn.com/tfs/TB1NwmBEL9TBuNjy1zbXXXpepXa-2400-1218.png'
-    webhook="https://oapi.dingtalk.com/robot/send?access_token=d93246056e51aed5a10bc70daad371de93557d4f1b41d5662c0506dc0e306932"
-    secret= "SECe47d5a33a263cfc88e9a667c46da0cf7854fd683cd84cebe31e7e524b8b60cc4"
+    img_url = 'https://img.alicdn.com/tfs/TB1NwmBEL9TBuNjy1zbXXXpepXa-2400-1218.png'
+    def __init__(self, notice_info=None):
+        """ 发送钉钉通知 """
+
+        if not notice_info:
+            self.webhook="https://oapi.dingtalk.com/robot/send?access_token=d93246056e51aed5a10bc70daad371de93557d4f1b41d5662c0506dc0e306932"
+            self.secret= "SECe47d5a33a263cfc88e9a667c46da0cf7854fd683cd84cebe31e7e524b8b60cc4"
+
+        else:
+            self.webhook = notice_info.get('webhook')
+            self.secret = notice_info.get('secret')
 
     def xiao_ding(self):
         sign = self.get_sign()

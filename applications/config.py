@@ -2,7 +2,7 @@ import logging
 from datetime import timedelta
 
 
-# from urllib.parse import quote_plus as urlquote
+from urllib.parse import quote_plus as urlquote
 
 
 class BaseConfig:
@@ -40,18 +40,18 @@ class BaseConfig:
     # JSON配置
     JSON_AS_ASCII = False
 
-    SECRET_KEY = "pear-system-flask1"
+    SECRET_KEY = "carlos-flask"
 
-    # mysql 配置
-    # MYSQL_USERNAME = "root"
-    # MYSQL_PASSWORD = "123456"
-    # MYSQL_HOST = "127.0.0.1"
-    # MYSQL_PORT = 3306
-    # MYSQL_DATABASE = "PearAdminFlask"
+    #mysql 配置
+    MYSQL_USERNAME = "root1"
+    MYSQL_PASSWORD = "123456"
+    MYSQL_HOST = "39.105.205.148"
+    MYSQL_PORT = 3306
+    MYSQL_DATABASE = "pearflaskadmin"
 
     # 数据库的配置信息
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///../pear.db'
-    # SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{MYSQL_USERNAME}:{urlquote(MYSQL_PASSWORD)}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}?charset=utf8mb4"
+    # SQLALCHEMY_DATABASE_URI = 'sqlite:///../pear.db'
+    SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{MYSQL_USERNAME}:{urlquote(MYSQL_PASSWORD)}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}?charset=utf8mb4"
 
     # 默认日志等级
     LOG_LEVEL = logging.ERROR

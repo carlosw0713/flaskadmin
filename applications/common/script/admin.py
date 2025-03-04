@@ -3,7 +3,7 @@ import datetime
 from flask.cli import AppGroup
 
 from applications.extensions import db
-from applications.models import User, Role, Dept, Power
+from applications.models import User, Role, Dept, Power,JobInfo,ScriptInfo
 
 admin_cli = AppGroup("admin")
 
@@ -533,8 +533,93 @@ powerdata = [
         create_time=now_time,
         enable=1,
 
+    ),
+
+
+    # 添加EMS管理、任务管理和脚本管理
+    Power(
+            id=60,
+            name='EMS管理',
+            type='0',
+            code='',
+            url='',
+            open_type='',
+            parent_id='0',
+            icon='layui-icon layui-icon-camera',
+            sort=3,
+            create_time=now_time,
+            enable=1,
+
+            ),
+    Power(
+            id=61,
+            name='脚本管理',
+            type='1',
+            code='ems::script',
+            url='/ems/script',
+            open_type='_iframe',
+            parent_id='60',
+            icon='layui-icon ',
+            sort=1,
+            create_time=now_time,
+            enable=1,
+
+        ),
+    Power(
+        id=62,
+        name='任务管理',
+        type='1',
+        code='ems::job',
+        url='/ems/job',
+        open_type='_iframe',
+        parent_id='60',
+        icon='layui-icon ',
+        sort=2,
+        create_time=now_time,
+        enable=1,
+
     )
 
+]
+
+
+jobdata = [
+    JobInfo(
+        id=1,
+        job_name='调试任务',
+        cron_expression='30 * * * * *',
+        script_id=1,
+        script_name='调试脚本',
+        notification_config="通知配置",
+        job_status='任务状态',
+        create_at=now_time,
+        update_at=now_time,
+    )
+]
+
+scriptdata=[
+    ScriptInfo(
+        id=1,
+        script_name='调试脚本',
+        script_desc='脚本描述',
+        auth_info="授权信息",
+        input_params="入参信息",
+        script_path='applications.common.public.Scheduler.demo1.demoscheduler',
+        task_type='2',
+        create_at=now_time,
+        update_at=now_time,
+    ),
+    ScriptInfo(
+        id=2,
+        script_name='IOT设备监控脚本',
+        script_desc='IOT设备数据监控',
+        auth_info="{         'data': {             'username': 'admin',             'password': 'Hd3jIvfbLeo='        },         'host': 'https://ems-cluster-dev.heilansc.cn'     }",
+        input_params="{         'devicetimetype': {'sn': 60,'dev': 240, 'NO':180} ,         'userinfo':'https://iot-cluster-dev.heilansc.cn/\\uff08\\u7528\\u6237\\u4fe1\\u606f\\u3001\\u7528\\u6237token\\u3001\\u57df\\u540d\\uff09',         'alarmdeviceinfolist':[]      }",
+        script_path='applications.common.HLZY.IOT.way.device.iotdevicealarm.iotdevicedataalarm',
+        task_type='1',
+        create_at=now_time,
+        update_at=now_time,
+    ),
 ]
 
 
@@ -556,6 +641,10 @@ def add_role_power():
     db.session.commit()
 
 
+
+
+
+
 @admin_cli.command("init")
 def init_db():
     db.session.add_all(userdata)
@@ -572,4 +661,15 @@ def init_db():
     print("用户角色数据存入")
     add_role_power()
     print("角色权限数据存入")
+
+    db.session.add_all(scriptdata)
+    db.session.commit()
+    db.session.add_all(jobdata)
+    db.session.commit()
+    print("任务管理和脚本管理数据存入")
+
+
     print("数据初始化完成,请使用run脚本运行")
+
+
+

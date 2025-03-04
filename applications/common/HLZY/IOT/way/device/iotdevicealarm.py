@@ -22,7 +22,7 @@ bp = Blueprint('iotdevicealarm', __name__, url_prefix='/iotdevicealarm')
 
 
 
-class GatewayDataAlarm(Communicationlog,Device,DingTalkSendMsg):
+class GatewayDataAlarm(Communicationlog,Device):
 
     def __init__(self,auth_info):
         IOT_INFO=auth_info
@@ -167,7 +167,11 @@ class GatewayDataAlarm(Communicationlog,Device,DingTalkSendMsg):
         if len(alarminfo.get('alarmdeviceinfolist'))>0:
 
             noticetext=self.alarmnoticemodel(alarminfo=alarminfo)
-            self.send_ding_notification(noticetext=noticetext)
+            return noticetext
+        else:
+            return None
+
+
 
     def alarmnoticemodel(self,alarminfo):
         '''
@@ -205,10 +209,15 @@ def iotdevicedataalarm(**kwargs):
 
     auth_info=kwargs.get('auth_info')
     json_data=kwargs.get('input_params')
+    notice_info=kwargs.get('notification_config')
 
     auth_info = loginmodel(logininfo=auth_info)
     task=GatewayDataAlarm(auth_info=auth_info)
-    task.alarmdeviceinfo(json_data)
+    noticetext=task.alarmdeviceinfo(alarminfo=json_data)
+
+    if noticetext:
+
+        DingTalkSendMsg(notice_info=notice_info).send_ding_notification(noticetext=noticetext)
 
 
 @bp.post('/')

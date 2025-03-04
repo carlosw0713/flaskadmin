@@ -41,10 +41,13 @@ def run_method(script_path,auth_info,input_params):
     fun_obj = get_method_object(envpath, fun_name)
 
 
-
     try:
 
-        result = fun_obj(dict_escape(auth_info),dict_escape(input_params))  # 直接调用
+        # result = fun_obj(dict_escape(auth_info),dict_escape(input_params))  # 直接调用
+
+        inputdict={"auth_info":dict_escape(auth_info),"input_params":dict_escape(input_params)}
+
+        result = fun_obj(**inputdict)  # 直接调用
         return result
     except Exception as e:
         return (f"方法执行异常: {e}")
