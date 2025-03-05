@@ -44,7 +44,7 @@ source ./test_env/bin/activate
 
 ```shell
 # 使用 pip 安装必要模块（对于 master 分支）
-pip install -r requirements.txt
+pip install -r requirement.txt
 
 # 使用 pip 安装必要模块（对于 mini 分支）
 pip install -r requirement.txt

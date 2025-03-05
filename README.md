@@ -162,16 +162,16 @@ venv\Scripts\Activate.ps1  # Windows Powershell
 . venv/bin/activate  # Linux
 
 # 使用 pip 安装
-pip install -r requirements.txt
+pip install -r requirement.txt
 ```
 
 ## 直接安装项目
 
 ```bash
 # 使用 pip 安装
-pip install -r requirements.txt
+pip install -r requirement.txt
 # 同时你可以选择以模块的方式调用 pip
-python -m pip install -r requirements.txt
+python -m pip install -r requirement.txt
 ```
 
 # 运行项目
