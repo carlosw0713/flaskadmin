@@ -43,11 +43,11 @@ class BaseConfig:
     SECRET_KEY = "carlos-flask"
 
     #mysql 配置
-    MYSQL_USERNAME = "root1"
-    MYSQL_PASSWORD = "123456"
-    MYSQL_HOST = "39.105.205.148"
+    MYSQL_USERNAME = "root"
+    MYSQL_PASSWORD = "heilansc"
+    MYSQL_HOST = "10.1.1.217"
     MYSQL_PORT = 3306
-    MYSQL_DATABASE = "pearflaskadmin"
+    MYSQL_DATABASE = "paerflask"
 
     # 数据库的配置信息
     # SQLALCHEMY_DATABASE_URI = 'sqlite:///../pear.db'

@@ -1,4 +1,5 @@
 import datetime
+import time
 
 from flask.cli import AppGroup
 
@@ -653,9 +654,14 @@ def init_db():
     print("加载系统必须角色数据")
     db.session.add_all(deptdata)
     print("加载系统必须部门数据")
+
+    db.session.commit()
+
     db.session.add_all(powerdata)
     print("加载系统必须权限数据")
     db.session.commit()
+
+
     print("基础数据存入")
     add_user_role()
     print("用户角色数据存入")
