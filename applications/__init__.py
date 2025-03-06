@@ -1,6 +1,5 @@
 import os
 
-from apscheduler.schedulers.background import BackgroundScheduler
 
 from flask import Flask
 from applications.common.script import init_script
