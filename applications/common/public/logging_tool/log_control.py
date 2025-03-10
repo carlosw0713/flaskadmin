@@ -103,6 +103,10 @@ CURRENT_DIR = os.path.abspath(__file__)
 BASE_DIR=root_dirname_number(path=CURRENT_DIR,number=3)
 LOGS = os.path.join(BASE_DIR,"HLZY","logs" )
 
+if not os.path.exists(LOGS):
+    os.makedirs(LOGS)
+
+
 now_time_day = time.strftime("%Y-%m-%d", time.localtime())
 INFO = LogHandler(os.path.join(LOGS,f"info-{now_time_day}.log"), level='info')
 ERROR = LogHandler(os.path.join(LOGS,f"error-{now_time_day}.log"), level='error')
