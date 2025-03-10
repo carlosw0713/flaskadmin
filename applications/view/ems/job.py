@@ -166,7 +166,7 @@ def update():
     job_data = {
         'job_name': str_escape(req.get('job_name')),
         'cron_expression': str_escape(req.get('cron_expression')),
-        'notification_config': str_escape(req.get('notification_config')),
+        'notification_config': req.get('notification_config'),
         'script_name': str_escape(req.get('script_name')),
         'script_id': str_escape(req.get('script_id')),
         'job_status': str_escape(req.get('job_status'))
