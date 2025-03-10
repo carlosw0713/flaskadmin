@@ -186,6 +186,7 @@ class GatewayDataAlarm(Communicationlog,Device):
             alarmdeviceinfotext+=f"{alarmdeviceinfo}\n"
 
         noticetext=(f"### 【IOT告警信息】\n"
+                    f"### 当前时间{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
                     f"#### 用户信息:\n"
                     f"{alarminfo.get('userinfo')}\n"
                     f"#### 监控规则:\n"
@@ -230,19 +231,26 @@ def runtask():
     from concurrent.futures import ThreadPoolExecutor
 
 
-    re=request.get_json()
+    rejson_data=request.get_json()
 
-    auth_info=re.get('auth_info')
-    alarminfo=re.get('alarminfo')
+    # auth_info=re.get('auth_info')
+    # alarminfo=re.get('alarminfo')
 
 
     executor = ThreadPoolExecutor(max_workers=5)
-    executor.submit(iotdevicedataalarm,auth_info,alarminfo)
+    executor.submit(iotdevicedataalarm,**rejson_data)
 
     # 立即返回任务ID给客户端
     return {"message": "任务已启动，无需等待结果"}, 202
 
 
 if __name__ == '__main__':
-    runtask()
+    # runtask()
+
+    pass
+    # 方法调用
+
+
+
+
 

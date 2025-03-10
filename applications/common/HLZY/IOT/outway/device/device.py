@@ -28,7 +28,7 @@ class Device():
                                       headers=self.headers)
 
         resp = response.json()
-        curl = generate_curl_command(response)
+        
         if resp.get('code') == 0:
             INFO.logger.info(f" 获取网关子设备成功，返回信息")
             return resp
@@ -47,7 +47,7 @@ class Device():
                                        json=json_data)
 
         resp = response.json()
-        curl = generate_curl_command(response)
+        
         result = resp.get('data')
         if resp.get('code') == 0:
             INFO.logger.info(f"iot产品添加设备成功，请求信息信息：{json_data}")
@@ -69,7 +69,7 @@ class Device():
                                    headers=self.headers)
 
         resp = response.json()
-        curl = generate_curl_command(response)
+        
         result = resp.get('data')
         if resp.get('code') == 0:
             INFO.logger.info(f"iot产品删除设备成功，请求信息信息：{deviceCode}")
@@ -90,7 +90,7 @@ class Device():
                                  cookies=self.cookies, headers=self.headers)
 
         resp = response.json()
-        curl = generate_curl_command(response)
+        
         result = resp.get('data')
         if resp.get('code') == 0:
             INFO.logger.info(f"产品{productCode}发布上线成功")
@@ -108,7 +108,7 @@ class Device():
                                 headers=self.headers)
 
         resp = response.json()
-        curl = generate_curl_command(response)
+        
         result = resp.get('data')
         if resp.get('code') == 0:
             INFO.logger.info(f"成功，返回信息")
@@ -128,7 +128,7 @@ class Device():
                                        json=json_data)
 
         resp = response.json()
-        curl = generate_curl_command(response)
+        
         result = resp.get('data')
         if resp.get('code') == 0:
             INFO.logger.info(f"产品创建成功，返回信息")
@@ -151,7 +151,7 @@ class Device():
                                 headers=self.headers)
 
         resp = response.json()
-        curl = generate_curl_command(response)
+        
         if resp.get('code') == 0:
             result = resp.get('data').get('records')  # 返回设备列表
             INFO.logger.info(f"产品物模型数据查询成功，返回信息")
@@ -193,7 +193,7 @@ class Device():
                                       headers=self.headers)
 
         resp = response.json()
-        curl = generate_curl_command(response)
+        
         if resp.get('code') == 0:
             INFO.logger.info(f"IOT产品列表查询成功，返回信息：{resp}")
             return resp
@@ -211,7 +211,7 @@ class Device():
         response = requestSession.post(f'{self.uri}/api/iot/product/publish', params=params, cookies=self.cookies,
                                       headers=self.headers)
         resp = response.json()
-        curl = generate_curl_command(response)
+        
         if resp.get('code') == 0:
             INFO.logger.info(f" 产品发布成功，返回信息：{resp}")
             return resp
@@ -238,7 +238,7 @@ class Device():
         response = requestSession.get(f'{self.uri}/api/iot/device/page', params=params, cookies=self.cookies,headers=self.headers)
 
         resp = response.json()
-        curl = generate_curl_command(response)
+        
 
         if resp.get('code') == 0:
             INFO.logger.info(f"设备列表查询成功，返回信息")
@@ -383,7 +383,7 @@ class Device():
 
 
 if __name__ == '__main__':
-    task=EquipmentMock()
+    task=Device()
     # task.run_addiotproduct()
 
     task.run_bacthaddiotdevice()

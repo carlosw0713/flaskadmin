@@ -30,7 +30,7 @@ class Communicationlog():
                                       headers=self.headers)
 
         resp = response.json()
-        curl = generate_curl_command(response)
+        
         if resp.get('code') == 0:
             INFO.logger.info(f"通信日志信息查询成功，返回信息")
             return resp

@@ -17,11 +17,6 @@ requestSession = requests.Session()
 requestSession.verify = False
 from applications.common.public.logging_tool.log_control import *
 
-
-from applications.common.public.APi.Apicommon import generate_curl_command
-
-
-
 def loginmodel(logininfo):
     '''
     登录模板
